@@ -29,6 +29,8 @@ object Start extends App {
     }
   }
 
+  val field = fillFieldByRow(0, Nil.toVector)
+
   //println(fillFieldByRow(0, Nil.toVector))
 
   def validateShip(ship: Ship): Boolean = {
@@ -65,14 +67,26 @@ object Start extends App {
   }
 
   val ship: Ship = List((2,5), (3,5), (4,5), (5,5))
-  println(validateShip(ship))
-
+  //val ship: Ship = List((8,9), (8,10))
+  //println(validateShip(ship))
 
   def validatePosition(ship: Ship, field: Field): Boolean = {
+    for(x <- ship(0)._1 - 1 to ship(ship.length - 1)._1 + 1;
+        y <- ship(0)._2 - 1 to ship(ship.length - 1)._2 + 1
+        if (x != -1 && x !=10 && y != -1 && y != 10)) {
+      //println(x + "; " + y)
+
+      if(x < -1 || x > 10 || y < -1 || y > 10)
+        return false
+
+      if(field(x)(y))
+        return false
+    }
+
     true
   }
 
-
+  println(validatePosition(ship, field))
 
 
 }
