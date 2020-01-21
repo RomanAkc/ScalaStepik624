@@ -66,8 +66,8 @@ object Start extends App {
       checkPrevious(ship, 1, ship(0)._1, true)
   }
 
-  val ship: Ship = List((2,5), (3,5), (4,5), (5,5))
-  //val ship: Ship = List((8,9), (8,10))
+  //val ship: Ship = List((2,5), (3,5), (4,5), (5,5))
+  val ship: Ship = List((0,0), (0,1), (0,2), (0,3))
   //println(validateShip(ship))
 
   def validatePosition(ship: Ship, field: Field): Boolean = {
@@ -86,7 +86,32 @@ object Start extends App {
     true
   }
 
-  println(validatePosition(ship, field))
+  //println(validatePosition(ship, field))
+  /*object NilMap {
+    def unapply(map: Map[_, _]): Boolean =
+      map.isEmpty
+  }*/
 
+  def enrichFleet(fleet: Fleet, name: String, ship: Ship): Fleet = {
+    fleet + (name -> ship)
+  }
 
+  //val fleet = enrichFleet(Map[String, Ship](), "One", ship)
+  //println(fleet)
+
+  def markUsedCells(field: Field, ship: Ship): Field = {
+    if(ship.length == 0)
+      field
+    else {
+      val x = ship(0)._1
+      val y = ship(0)._2
+      val vec: Vector[Boolean] = field(x)
+      val newVec: Vector[Boolean] = vec.patch(y, Seq(true), 1)
+      val newField: Field = field.patch(x, Seq(newVec), 1)
+      markUsedCells(newField, ship.tail)
+    }
+  }
+
+  val newField = markUsedCells(field, ship)
+  println(newField)
 }
