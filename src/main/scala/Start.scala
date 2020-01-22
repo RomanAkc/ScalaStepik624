@@ -56,7 +56,7 @@ object Start extends App {
         if(scala.math.abs(ship(index)._2 - prevValue) != 1)
           return false
         else
-          checkPrevious(ship, index + 1, ship(index)._1, checkX)
+          checkPrevious(ship, index + 1, ship(index)._2, checkX)
       }
     }
 
@@ -112,6 +112,50 @@ object Start extends App {
     }
   }
 
-  val newField = markUsedCells(field, ship)
-  println(newField)
+  //val newField = markUsedCells(field, ship)
+  //println(newField)
+
+  val game = (field, Map[String, Ship]())
+  def tryAddShip(game: Game, name: String, ship: Ship): Game = ship match {
+    case ship if !validateShip(ship) => game
+    case ship if !validatePosition(ship, game._1) => game
+    case ship => (markUsedCells(game._1, ship), enrichFleet(game._2, name, ship))
+  }
+
+  //test 1
+  /*val ship1: Ship = List((2,5), (3,5), (4,5), (5,5))
+  val ship2: Ship = List((9,9))
+
+  val game1: Game = tryAddShip(game, "MillenniumFalcon", ship1)
+  val game2: Game = tryAddShip(game1, "Varyag", ship2)
+
+  println(game2._2)*/
+
+  //test2
+  /*val ship10: Ship = List((1,6), (1,7), (1,8))
+  val ship20: Ship = List((2,5), (3,5), (4,5), (5,5))
+  val ship30: Ship = List((9,9))
+
+  val game10: Game = tryAddShip(game, "BlackPearl", ship10)
+  val game20: Game = tryAddShip(game10, "MillenniumFalcon", ship20)
+  val game30: Game = tryAddShip(game20, "Varyag", ship30)
+
+  println(game30._2)*/
+  val countShips = scala.io.StdIn.readLine().toInt
+
+  def readShip(): (String, Ship) = {
+    val header: List[String] = scala.io.StdIn.readLine().split(' ').toList
+    def readPoints(index: Int, maxIndex: Int, list: List[Point]) : List[Point] = index match {
+      case index if index == maxIndex => list.reverse
+      case index => {
+        val point = scala.io.StdIn.readLine().split(' ')
+        readPoints(index + 1, maxIndex, (point(0).toInt, point(1).toInt) +: list)
+      }
+    }
+    (header(0), readPoints(0, header(1).toInt, Nil))
+  }
+
+  val firstShip = readShip()
+  println(firstShip._1)
+  println(firstShip._2)
 }
