@@ -141,7 +141,6 @@ object Start extends App {
   val game30: Game = tryAddShip(game20, "Varyag", ship30)
 
   println(game30._2)*/
-  val countShips = scala.io.StdIn.readLine().toInt
 
   def readShip(): (String, Ship) = {
     val header: List[String] = scala.io.StdIn.readLine().split(' ').toList
@@ -155,7 +154,17 @@ object Start extends App {
     (header(0), readPoints(0, header(1).toInt, Nil))
   }
 
-  val firstShip = readShip()
-  println(firstShip._1)
-  println(firstShip._2)
+
+  def initializeGame(game: Game, indexShip: Int): Game = indexShip match {
+    case indexShip if indexShip == 0 => game
+    case indexShip => {
+      val ship = readShip()
+      initializeGame(tryAddShip(game, ship._1, ship._2), indexShip - 1)
+    }
+  }
+
+  val countShips = scala.io.StdIn.readLine().toInt
+  val game1 = initializeGame(game, countShips)
+
+  game1._2.foreach((x => println(x._1)))
 }
